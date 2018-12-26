@@ -1,0 +1,14 @@
+<aside class="on-side">
+  <section>
+    <p>select image</p>
+    <input id="selected-image" (change)="readUrl($event)" type="file" name="pic" accept="image/*" multiple>
+  </section>
+  <section *ngIf="urls">
+    <div *ngFor="let url of urls">
+      <div class="preview-container">
+        <img class="uploaded-previews" (click)="putOnCalendar(url)" [src]="url">
+        <button class="delete-preview" (click)="deletePreview($event)">X</button>
+      </div>
+    </div>
+  </section>
+</aside>

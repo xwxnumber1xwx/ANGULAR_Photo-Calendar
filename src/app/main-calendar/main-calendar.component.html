@@ -1,0 +1,17 @@
+<app-sidebar id="sidebar" (onSelected)="UseThisPicture($event)"></app-sidebar>
+
+<section id="calendar-section">
+  <div id='calendar-container'>
+    <div id="calendar-border">
+      <div id="photo-container">
+        <img id="calendar-photo" *ngIf="image" [src]="image">
+      </div>
+      <div id="month-container">
+        <p>{{year}}</p>
+        <ul>
+          <li class="calendar-tab" *ngFor="let day of month">{{day}}</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
