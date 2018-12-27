@@ -7,7 +7,8 @@
         <img id="calendar-photo" *ngIf="image" [src]="image">
       </div>
       <div id="month-container">
-        <p>{{year}}</p>
+        <h2 id="calendar-year">{{monthName}} {{year}}</h2>
+        <button (click)="lastMonth()">-</button><button (click)="nextMonth()">+</button>
         <ul>
           <li class="calendar-tab" *ngFor="let day of month">{{day}}</li>
         </ul>
