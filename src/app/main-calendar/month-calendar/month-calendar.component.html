@@ -1,0 +1,12 @@
+<div class="calendar-border">
+  <div class="photo-container">
+    <img class="calendar-photo" *ngIf="pictureSettings.url" [src]="pictureSettings.url" (click)="modifyImage($event)" (dragstart)="dragImage($event)"
+    [ngStyle]="getStyle()">
+  </div>
+  <div class="month-container">
+    <h2 class="calendar-year">{{monthName}} {{year}}</h2>
+    <ul>
+      <li class="calendar-tab" *ngFor="let day of month">{{day}}</li>
+    </ul>
+  </div>
+</div>

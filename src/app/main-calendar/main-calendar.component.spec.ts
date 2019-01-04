@@ -2,7 +2,8 @@ import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing'
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { MainCalendarComponent } from './main-calendar.component';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MonthCalendarComponent } from './month-calendar/month-calendar.component'
 
 
 describe('MainCalendarComponent', () => {
@@ -11,10 +12,11 @@ describe('MainCalendarComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MainCalendarComponent, SidebarComponent ],
+      declarations: [ MainCalendarComponent, SidebarComponent, MonthCalendarComponent ],
       imports: [
         HttpClientTestingModule,
-        FormsModule]
+        FormsModule,
+        ReactiveFormsModule]
     })
     .compileComponents();
   }));

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ImagesService } from '../images.service';
 
 @Component({
   selector: 'app-main-calendar',
@@ -7,69 +8,52 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MainCalendarComponent implements OnInit {
 
-  image: any;
-  date: Date;
-  year: number;
-  month: any[] = [];
-  monthName: string = '';
+  //url: any[] = [];
+  url: any = '';
+  wholeYear: Date[] = [];
+  currentMonth: number = 0;
+  yearsList: number[] = [];
 
-  constructor() { }
+  constructor(private imagesService: ImagesService) { }
 
   ngOnInit() {
-    this.date = new Date;
-    this.month = this.createCalendarDate();
+    this.createYear();
+    this.createYearList(this.yearsList);
+
+  };
+
+  createYearList(years) {
+    let y = new Date();
+    for (let i = 0; i < 5; i++) {
+        years.push(y.getFullYear() + i);
+    }
   }
 
-  createCalendarDate(): any {
-    let month: any[] = [];
-    this.year = this.date.getFullYear();
-    this.monthName = this.getMonthName(this.date.getMonth());
-    let daysOfMonth = this.getFullMonth(this.date.getMonth());
-    let daysOfLastMonth = this.getFullMonth(this.date.getMonth() - 1);
-    this.date.setDate(1);
-    let firstDay = this.date.getDay();
-    console.log("firstDay " + firstDay);
-    let m: number[] = [];
-    // +1 mean week start sunday, TODO: +2 for monday but got some error to fix
-    for (let i = -firstDay+1; i <= daysOfMonth; i++) {
-      if (i<1) {
-        month.push(daysOfLastMonth - i - firstDay+1)
-      } else
-      m.push(i);
+  createYear(year?: number) {
+    for (let i = 0; i <= 11; i++) {
+      let d = new Date();
+      if(year) {
+        d.setFullYear(year);
+      }
+      d.setDate(1);
+      d.setMonth(i);
+      this.wholeYear.push(d)
     }
-    month.reverse();
-    month = month.concat(m);
-    return month;
   }
+
+  UseThisPicture(url: any, currentMonth: number) {
+    //this.url[currentMonth] = url;
+    this.url = url;
+    this.imagesService.setImage(currentMonth, url);
+  };
 
   nextMonth(): void {
-    this.date.setMonth(this.date.getMonth()+1);
-    this.month = this.createCalendarDate();
-  }
+    if (this.currentMonth != 11)
+      this.currentMonth++;
+  };
+
   lastMonth(): void {
-    this.date.setMonth(this.date.getMonth()-1);
-    this.month = this.createCalendarDate();
-  }
-
-  getFullMonth(m): number {
-    if (m < 0) {
-      m = 11;
-    }
-    if ((m === 3) || m === 5 || m === 8 || m === 10) {
-      return 30;
-    } else if (m === 1) {
-      return 28;
-    }
-    return 31;
-  }
-
-  getMonthName(n): string {
-    let months    = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-    return months[n];
-  }
-
-  UseThisPicture(url: any) {
-    this.image = url;
-  }
-
+    if (this.currentMonth != 0)
+      this.currentMonth--;
+  };
 }

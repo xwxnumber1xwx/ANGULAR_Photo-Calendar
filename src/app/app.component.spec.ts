@@ -3,19 +3,22 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { MainCalendarComponent } from './main-calendar/main-calendar.component';
-import { FormsModule } from '@angular/forms';
+import { MonthCalendarComponent } from './main-calendar/month-calendar/month-calendar.component'
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
         RouterTestingModule,
-        FormsModule
+        FormsModule,
+        ReactiveFormsModule
       ],
       declarations: [
         AppComponent,
         SidebarComponent,
-        MainCalendarComponent
+        MainCalendarComponent,
+        MonthCalendarComponent
       ],
     }).compileComponents();
   }));

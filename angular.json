@@ -29,7 +29,7 @@
             "styles": [
               "src/styles.sass"
             ],
-            "scripts": []
+            "scripts": [ ]
           },
           "configurations": {
             "production": {
@@ -85,7 +85,7 @@
             "styles": [
               "src/styles.sass"
             ],
-            "scripts": [],
+            "scripts": [ ],
             "assets": [
               "src/favicon.ico",
               "src/assets"

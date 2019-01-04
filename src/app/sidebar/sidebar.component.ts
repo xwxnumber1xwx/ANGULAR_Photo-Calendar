@@ -1,4 +1,6 @@
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
+import $ from 'jquery'
+
 
 @Component({
   selector: 'app-sidebar',

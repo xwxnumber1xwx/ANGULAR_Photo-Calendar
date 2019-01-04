@@ -4,18 +4,21 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MainCalendarComponent } from './main-calendar/main-calendar.component';
+import { MonthCalendarComponent } from './main-calendar/month-calendar/month-calendar.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     SidebarComponent,
-    MainCalendarComponent
+    MainCalendarComponent,
+    MonthCalendarComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
+    ReactiveFormsModule,
     AppRoutingModule,
     HttpClientModule
   ],
