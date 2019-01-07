@@ -1,7 +1,6 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import * as $ from 'jquery'
 import 'jquery-ui/ui/widgets/draggable';
-import { ImagesService } from '../../images.service';
 
 @Component({
   selector: 'app-month-calendar',
@@ -9,34 +8,25 @@ import { ImagesService } from '../../images.service';
   styleUrls: ['./month-calendar.component.sass']
 })
 export class MonthCalendarComponent implements OnInit {
-  @Input()
-  set url(url: any) {
-    // TODO, URL has the same data for every component!
-    this.pictureSettings.url = url;
 
-  }
   @Input() date: Date = new Date;
+
+  @Input() image: any;
+
+  @Output()
+  imageSettings = new EventEmitter<any>();
+
   currentMonth: number = 0;
   year: number;
   month: any[] = [];
   monthName: string = '';
   customSettings: boolean = false;
-  pictureSettings: any = {
-    url: '',
-    settings: {
-      top: 0,
-      left: 0
-    }
-  }
 
-  constructor(private imagesService: ImagesService) { }
+  constructor() { }
 
   ngOnInit() {
     this.currentMonth = this.date.getMonth();
     this.month = this.createCalendarDate();
-    //this.url = this.imagesService.getImage(this.currentMonth);
-    console.log(this.pictureSettings);
-      //this.pictureSettings.settings = this.imagesService.getImage(this.currentMonth).settings;
   }
 
   modifyImage(event) {
@@ -45,20 +35,27 @@ export class MonthCalendarComponent implements OnInit {
       c.draggable();
       this.customSettings = true;
       c.on("dragstop", (event, ui) => {
-        this.pictureSettings.settings.top = ui.position.top;
-        this.pictureSettings.settings.left = ui.position.left;
-        console.log(this.pictureSettings);
-        this.imagesService.setSettings(this.currentMonth, this.pictureSettings);
+        let position = {
+          type: 'position',
+          settings: {
+            top: ui.position.top,
+            left: ui.position.left
+          }
+        };
+        this.imageSettings.emit(position);
       });
     }
   }
 
   getStyle(): any {
-    return {
-      'position': 'relative',
-      'left': this.pictureSettings.settings.left + 'px',
-      'top': this.pictureSettings.settings.top + 'px'
+    if (this.image.settings) {
+      return {
+        'position': 'relative',
+        'left': this.image.settings.position.left + 'px',
+        'top': this.image.settings.position.top + 'px'
+      }
     }
+    return;
   }
 
   dragImage(event) {
@@ -105,10 +102,5 @@ export class MonthCalendarComponent implements OnInit {
     let months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     return months[n];
   }
-
-  /*UseThisPicture(url: any) {
-    this.url = url;
-  }
-  */
 
 }

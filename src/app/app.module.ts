@@ -7,6 +7,7 @@ import { SidebarComponent } from './sidebar/sidebar.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MainCalendarComponent } from './main-calendar/main-calendar.component';
 import { MonthCalendarComponent } from './main-calendar/month-calendar/month-calendar.component';
+import {Image} from './image'
 
 @NgModule({
   declarations: [
@@ -22,7 +23,7 @@ import { MonthCalendarComponent } from './main-calendar/month-calendar/month-cal
     AppRoutingModule,
     HttpClientModule
   ],
-  providers: [],
+  providers: [Image],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
