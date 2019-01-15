@@ -48,10 +48,9 @@ export class MainCalendarComponent implements OnInit {
     this.images[currentMonth].url = url;
   };
 
-
-  //TODO: when change a settings for one Image, all images settings will be changed (PROTO)
   updateSettings(settings, currentMonth) {
     this.images[currentMonth].settings[settings.type] = settings.settings;
+    console.log(this.images[currentMonth]);
   }
 
   nextMonth(): void {

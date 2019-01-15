@@ -1,0 +1,5 @@
+<app-tools-bar class="tools" draggable="true"></app-tools-bar>
+<img class="draggable" [src]="image.url" (click)="editImg($event)" [ngStyle]="getStyle()" mwlResizable
+  [enableGhostResize]="true" [resizeEdges]="{bottom: true, right: true, top: true, left: true}" (resizeEnd)="onResizeEnd($event)"
+  (resizeStart)="onResizeStart($event)">
+

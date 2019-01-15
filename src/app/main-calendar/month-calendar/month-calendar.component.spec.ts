@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import * as resize from 'angular-resizable-element';
 import { MonthCalendarComponent } from './month-calendar.component';
 
 describe('MonthCalendarComponent', () => {
@@ -8,7 +8,10 @@ describe('MonthCalendarComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MonthCalendarComponent]
+      declarations: [ MonthCalendarComponent, resize],
+      imports: [
+        resize
+      ]
     })
     .compileComponents();
   }));

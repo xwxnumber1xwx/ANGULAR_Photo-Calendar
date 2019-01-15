@@ -1,7 +1,6 @@
 <div class="calendar-border">
   <div class="photo-container">
-    <img class="calendar-photo" *ngIf="image.url" [src]="image.url" (click)="modifyImage($event)" (dragstart)="dragImage($event)"
-    [ngStyle]="getStyle()">
+    <app-picture class="calendar-photo" *ngIf="image.url" [image]="image" (imageSettings)="settingsToSend($event, currentMonth)"></app-picture>
   </div>
   <div class="month-container">
     <h2 class="calendar-year">{{monthName}} {{year}}</h2>
