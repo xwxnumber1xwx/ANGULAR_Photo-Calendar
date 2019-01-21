@@ -1,8 +1,4 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import * as $ from 'jquery'
-import 'jquery-ui/ui/widgets/draggable';
-import 'jquery-ui/ui/widgets/resizable';
-import { ResizeEvent } from 'angular-resizable-element';
 
 @Component({
   selector: 'app-month-calendar',

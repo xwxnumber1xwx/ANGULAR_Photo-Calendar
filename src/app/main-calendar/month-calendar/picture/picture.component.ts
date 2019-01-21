@@ -14,12 +14,13 @@ export class PictureComponent implements OnInit {
   @Input() image: any
 
   picture: any;
-  resizing: boolean = false;
   draggable: boolean = false;
   startResizePosition: any = {
     left: 0,
     top: 0
   }
+  cssPosition: string = 'relative';
+  opacity: number = 1;
 
   @Output()
   imageSettings = new EventEmitter<any>();
@@ -27,29 +28,37 @@ export class PictureComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    this.picture = $('.draggable');
+    this.editImg();
   }
 
-  editImg(event) {
-    this.picture = $(event.target);
+  editImg(): void {
     this.picture.draggable();
     this.draggable = true;
-    this.picture.on("dragstop", (event, ui) => {
-      if (!this.resizing) {
-        console.log('changing position');
-        let position = {
-          type: 'position',
-          settings: {
-            top: ui.position.top,
-            left: ui.position.left
-          }
-        };
-        this.imageSettings.emit(position);
-      }
+    this, this.picture.on("dragstart", (event, ui) => {
+      //the whole picture going to be visible on dragging (like overflow visible)
+      this.cssPosition = 'absolute';
+      this.opacity = 0.7;
     });
+    this.picture.on("dragstop", (event, ui) => {
+      console.log('changing position');
+      //overflow hidden
+      this.cssPosition = 'relative';
+      this.opacity = 1;
+      let position = {
+        type: 'position',
+        settings: {
+          top: ui.position.top,
+          left: ui.position.left
+        }
+      };
+      this.imageSettings.emit(position);
+    }
+    );
   }
 
   onResizeStart(event: ResizeEvent): void {
-    this.resizing = true;
+    this.picture.draggable('destroy');
     // saving the starting resize position
     this.startResizePosition.top = event.rectangle.top;
     this.startResizePosition.left = event.rectangle.left;
@@ -76,9 +85,8 @@ export class PictureComponent implements OnInit {
       }
     };
     this.imageSettings.emit(position);
-    this.resizing = false;
     if (this.draggable) {
-      this.picture.draggable('enable');
+      this.editImg();
     };
   }
 
@@ -86,11 +94,12 @@ export class PictureComponent implements OnInit {
   getStyle(): any {
     if (this.image.settings) {
       return {
-        'position': 'relative',
+        'position': this.cssPosition,
         'left': this.image.settings.position.left + 'px',
         'top': this.image.settings.position.top + 'px',
         'width': this.image.settings.size.width,
-        'height': this.image.settings.size.height
+        'height': this.image.settings.size.height,
+        'opacity': this.opacity
       }
     }
     return;
