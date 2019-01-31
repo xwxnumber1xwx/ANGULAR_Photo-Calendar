@@ -1,13 +1,13 @@
 <app-sidebar id="sidebar" (onSelected)="UseThisPicture($event, currentMonth)"></app-sidebar>
-<select name="year" id="select-year">
+<!-- <select name="year" id="select-year">
     <option *ngFor="let oneYear of yearsList" value="oneYear">{{oneYear}}</option>
-  </select>
+  </select> -->
 <section id="calendar-section">
 
   <div id='calendar-container'>
     <button (click)="lastMonth()">-</button><button (click)="nextMonth()">+</button>
     <div *ngFor="let month of wholeYear">
-      <app-month-calendar *ngIf="currentMonth === month.getMonth()" [image]="images[currentMonth]" [date]="month" (imageSettings)="updateSettings($event, currentMonth)"></app-month-calendar>
+      <app-month-calendar *ngIf="currentMonth === month.getMonth()" [images]="images[currentMonth]" [date]="month" (imageSettings)="updateSettings($event, currentMonth)"></app-month-calendar>
     </div>
   </div>
 </section>

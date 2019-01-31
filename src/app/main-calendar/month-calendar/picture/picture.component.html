@@ -1,4 +1,4 @@
-  <img class="draggable" [src]="image.url" [ngStyle]="getStyle()" mwlResizable
+  <img class="draggable" id="img_{{imgID}}" [src]="image.url" [ngStyle]="getStyle()" mwlResizable
   [enableGhostResize]="true" [resizeEdges]="{bottom: true, right: true, top: true, left: true}" (resizeEnd)="onResizeEnd($event)"
   (resizeStart)="onResizeStart($event)">
 

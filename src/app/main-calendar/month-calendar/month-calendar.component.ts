@@ -9,7 +9,7 @@ export class MonthCalendarComponent implements OnInit {
 
   @Input() date: Date = new Date;
 
-  @Input() image: any
+  @Input() images: any
 
   @Output()
   imageSettings = new EventEmitter<any>();

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, DoCheck, KeyValueDiffers, KeyValueDiffer } from '@angular/core';
 import * as $ from 'jquery'
 import 'jquery-ui/ui/widgets/draggable';
 import 'jquery-ui/ui/widgets/resizable';
@@ -9,43 +9,76 @@ import { ResizeEvent } from 'angular-resizable-element';
   templateUrl: './picture.component.html',
   styleUrls: ['./picture.component.sass']
 })
-export class PictureComponent implements OnInit {
+export class PictureComponent implements OnInit/*, DoCheck */{
 
-  @Input() image: any
+  @Input() image: any;
+  @Input() imgID: number;
+
+  /*differ: KeyValueDiffer<string, any>;*/
 
   picture: any;
   draggable: boolean = false;
+
   startResizePosition: any = {
     left: 0,
     top: 0
   }
-  cssPosition: string = 'relative';
+  cssPosition: string = 'absolute';
   opacity: number = 1;
+  /*startPosition: object = {
+    type: 'position',
+    settings: {
+      top: 0,
+      left: 0
+    }
+  }
+  startSize: object = {
+    type: 'size',
+    settings: {
+      width: 'inherit',
+      height: 'inherit'
+    }
+  }
+  */
 
   @Output()
   imageSettings = new EventEmitter<any>();
 
-  constructor() { }
+  constructor(/*private differs: KeyValueDiffers*/) {
+    //this.differ = this.differs.find({}).create();
+  }
 
   ngOnInit() {
-    this.picture = $('.draggable');
+  }
+
+  ngAfterViewInit(): void {
+    //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
+    //Add 'implements AfterViewInit' to the class.
+    this.picture = $(`#img_${this.imgID}`);
     this.editImg();
   }
+
+  /*ngDoCheck(): void {
+    const changes = this.differ.diff(this.image);
+    if (changes) {
+      console.log(changes);
+      this.imageSettings.emit(this.startPosition);
+      this.imageSettings.emit(this.startSize);
+    }
+  }
+  */
 
   editImg(): void {
     this.picture.draggable();
     this.draggable = true;
-    this, this.picture.on("dragstart", (event, ui) => {
-      //the whole picture going to be visible on dragging (like overflow visible)
-      this.cssPosition = 'absolute';
+    this.picture.on("dragstart", (event, ui) => {
       this.opacity = 0.7;
     });
     this.picture.on("dragstop", (event, ui) => {
       console.log('changing position');
-      //overflow hidden
-      this.cssPosition = 'relative';
       this.opacity = 1;
-      let position = {
+      let position: object = {
+        id : this.imgID,
         type: 'position',
         settings: {
           top: ui.position.top,
@@ -66,7 +99,8 @@ export class PictureComponent implements OnInit {
 
   onResizeEnd(event: ResizeEvent): void {
     console.log('Element was resized', event);
-    let size = {
+    let size: object = {
+      id : this.imgID,
       type: 'size',
       settings: {
         width: event.rectangle.width + 'px',
@@ -77,6 +111,7 @@ export class PictureComponent implements OnInit {
     console.log("end top:" + (this.startResizePosition.top - event.rectangle.top));
     console.log("end left:" + (this.startResizePosition.left - event.rectangle.left));
     let position = {
+      id : this.imgID,
       type: 'position',
       settings: {
         //take out the difference between starting Resize position and ending resize position
