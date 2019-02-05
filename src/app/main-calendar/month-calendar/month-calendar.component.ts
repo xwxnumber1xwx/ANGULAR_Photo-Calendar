@@ -1,4 +1,5 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
+import { ToolsBarComponent } from './tools-bar/tools-bar.component'
 
 @Component({
   selector: 'app-month-calendar',
@@ -6,6 +7,9 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
   styleUrls: ['./month-calendar.component.sass']
 })
 export class MonthCalendarComponent implements OnInit {
+
+  @ViewChild(ToolsBarComponent)
+    private toolsBarComponent: ToolsBarComponent;
 
   @Input() date: Date = new Date;
 
@@ -60,6 +64,12 @@ export class MonthCalendarComponent implements OnInit {
 
   settingsToSend(settings) {
     this.imageSettings.emit(settings);
+  }
+
+  focusOn(selectedImage) {
+    console.log('focusOn');
+    console.log(selectedImage);
+    this.toolsBarComponent.setImage(selectedImage);
   }
 
 }

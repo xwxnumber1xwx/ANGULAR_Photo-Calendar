@@ -1,4 +1,5 @@
-  <img class="draggable" id="img_{{imgID}}" [src]="image.url" [ngStyle]="getStyle()" mwlResizable
-  [enableGhostResize]="true" [resizeEdges]="{bottom: true, right: true, top: true, left: true}" (resizeEnd)="onResizeEnd($event)"
-  (resizeStart)="onResizeStart($event)">
+<img class="draggable display-tools calendar-images" id="img_{{imgID}}" [src]="image.url" [ngStyle]="getStyle()"
+  mwlResizable [enableGhostResize]="true" [resizeEdges]="{bottom: true, right: true, top: true, left: true}"
+  (resizeEnd)="onResizeEnd($event)"  (resizing)="onResizing($event)" (resizeStart)="onResizeStart($event)">
 
+<div id="border_{{imgID}}" [ngStyle]="getBorderStyle()" class="border not-visible"></div>

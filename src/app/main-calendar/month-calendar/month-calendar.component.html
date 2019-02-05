@@ -1,7 +1,11 @@
+<div *ngIf="images[0].url" class="tools-container">
+  <app-tools-bar #toolBar class="tools"></app-tools-bar>
+</div>
+
 <div class="calendar-border">
   <div class="photo-container">
     <span *ngFor="let image of images; let i = index">
-      <app-picture class="calendar-photo" *ngIf="image.url" [image]="image" [imgID]="i" (imageSettings)="settingsToSend($event, currentMonth)"></app-picture>
+      <app-picture class="calendar-photo" *ngIf="image.url" [image]="image" [imgID]="i" (imgFocus)="focusOn($event)" (imageSettings)="settingsToSend($event, currentMonth)"></app-picture>
     </span>
   </div>
   <div class="month-container">
