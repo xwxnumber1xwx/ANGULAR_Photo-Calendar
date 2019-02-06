@@ -56,8 +56,7 @@ export class MainCalendarComponent implements OnInit {
   };
 
   updateSettings(settings, currentMonth): void {
-    this.images[currentMonth][settings.id].settings[settings.type] = settings.settings;
-    console.log(this.images[currentMonth]);
+    this.images[currentMonth][settings.order].settings[settings.type] = settings.settings;
   }
 
   nextMonth(): void {

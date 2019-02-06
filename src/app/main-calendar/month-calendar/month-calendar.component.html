@@ -5,7 +5,7 @@
 <div class="calendar-border">
   <div class="photo-container">
     <span *ngFor="let image of images; let i = index">
-      <app-picture class="calendar-photo" *ngIf="image.url" [image]="image" [imgID]="i" (imgFocus)="focusOn($event)" (imageSettings)="settingsToSend($event, currentMonth)"></app-picture>
+      <app-picture class="calendar-photo" *ngIf="image.url" [image]="image" [imgPosition]="i" [currentMonth]="currentMonth" (imgFocus)="focusOn($event)" (imageSettings)="settingsToSend($event, currentMonth)"></app-picture>
     </span>
   </div>
   <div class="month-container">

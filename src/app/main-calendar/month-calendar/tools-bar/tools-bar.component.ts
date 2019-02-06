@@ -36,6 +36,12 @@ export class ToolsBarComponent implements OnInit {
     this.listAllMonthImages.sort((a, b) => (a.style.zIndex > b.style.zIndex) ? 1 : ((b.style.zIndex > a.style.zIndex) ? -1 : 0));
   }
 
+  deleteImage(): void {
+    if (this.image) {
+      this.image.remove();
+    }
+  }
+
 
   moveForward(): void {
     if (this.image) {

@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 import { ToolsBarComponent } from './tools-bar/tools-bar.component'
+import * as $ from 'jquery'
 
 @Component({
   selector: 'app-month-calendar',
@@ -9,7 +10,7 @@ import { ToolsBarComponent } from './tools-bar/tools-bar.component'
 export class MonthCalendarComponent implements OnInit {
 
   @ViewChild(ToolsBarComponent)
-    private toolsBarComponent: ToolsBarComponent;
+  private toolsBarComponent: ToolsBarComponent;
 
   @Input() date: Date = new Date;
 
@@ -28,6 +29,15 @@ export class MonthCalendarComponent implements OnInit {
   ngOnInit() {
     this.currentMonth = this.date.getMonth();
     this.month = this.createCalendarDate();
+  }
+
+  ngAfterViewInit(): void {
+    // remove border if the user click outside of the picture
+    $(document).mousedown((event) => {
+      if (!($(event.target).hasClass('calendar-images') || $(event.target).hasClass('border'))) {
+        $('.border').addClass('not-visible');
+      }
+    })
   }
 
   createCalendarDate(): any {

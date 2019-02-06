@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, DoCheck, KeyValueDiffers, KeyValueDiffer, } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import * as $ from 'jquery'
 import 'jquery-ui/ui/widgets/draggable';
 import 'jquery-ui/ui/widgets/resizable';
@@ -9,12 +9,11 @@ import { ResizeEvent } from 'angular-resizable-element';
   templateUrl: './picture.component.html',
   styleUrls: ['./picture.component.sass']
 })
-export class PictureComponent implements OnInit/*, DoCheck */ {
+export class PictureComponent implements OnInit {
 
   @Input() image: any;
-  @Input() imgID: number;
-
-  /*differ: KeyValueDiffer<string, any>;*/
+  @Input() imgPosition: number;
+  @Input() currentMonth: number;
 
   picture: any;
   border: any;
@@ -26,21 +25,6 @@ export class PictureComponent implements OnInit/*, DoCheck */ {
   }
   cssPosition: string = 'absolute';
   opacity: number = 1;
-  /*startPosition: object = {
-    type: 'position',
-    settings: {
-      top: 0,
-      left: 0
-    }
-  }
-  startSize: object = {
-    type: 'size',
-    settings: {
-      width: 'inherit',
-      height: 'inherit'
-    }
-  }
-  */
 
   @Output()
   imageSettings = new EventEmitter<any>();
@@ -48,8 +32,7 @@ export class PictureComponent implements OnInit/*, DoCheck */ {
   @Output()
   imgFocus = new EventEmitter<any>();
 
-  constructor(/*private differs: KeyValueDiffers*/) {
-    //this.differ = this.differs.find({}).create();
+  constructor() {
   }
 
   ngOnInit() {
@@ -58,29 +41,37 @@ export class PictureComponent implements OnInit/*, DoCheck */ {
   ngAfterViewInit(): void {
     //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
     //Add 'implements AfterViewInit' to the class.
-    this.picture = $(`#img_${this.imgID}`);
+    this.picture = $(`#img_${this.imgPosition}`);
     //console.log('this.picture', this.picture;
-    this.border = document.getElementById(`border_${this.imgID}`);
-    this.border.style.width = this.picture.width() + 'px';
-    this.border.style.height = this.picture.height() + 'px';
-    this.picture.click(() => {
-      //console.log('focus on: ', this.picture)
+    this.border = document.getElementById(`border_${this.imgPosition}`);
+    this.bindBorderPicture();
+    this.picture.mousedown((event) => {
       this.imgFocus.emit(this.picture);
+      console.log('event: ', event.target);
+      console.log('picture: ', this.picture);
       $('.border').addClass('not-visible');
-      $(`#border_${this.imgID}`).removeClass('not-visible');
+      $(`#border_${this.imgPosition}`).removeClass('not-visible');
     })
+    window.addEventListener('scroll', (event) => {
+      this.bindBorderPicture();
+    })
+
+    window.addEventListener('resize', (event) => {
+      this.bindBorderPicture();
+    });
+
     this.editImg();
   }
 
-  /*ngDoCheck(): void {
-    const changes = this.differ.diff(this.image);
-    if (changes) {
-      console.log(changes);
-      this.imageSettings.emit(this.startPosition);
-      this.imageSettings.emit(this.startSize);
+  bindBorderPicture(): void {
+    if (this.border && this.picture) {
+      var rectPicture = document.getElementById(`img_${this.imgPosition}`).getBoundingClientRect();
+      this.border.style.left = `${rectPicture.left}px`;
+      this.border.style.top = `${rectPicture.top}px`;
+      this.border.style.width = this.picture.width() + 'px';
+      this.border.style.height = this.picture.height() + 'px';
     }
   }
-  */
 
   editImg(): void {
     this.picture.draggable();
@@ -89,20 +80,13 @@ export class PictureComponent implements OnInit/*, DoCheck */ {
       this.opacity = 0.7;
     });
     this.picture.on("drag", (event, ui) => {
-      this.border.style.top = ui.offset.top + 'px';
-      this.border.style.left = ui.offset.left + 'px';
+      this.bindBorderPicture();
     });
     this.picture.on("dragstop", (event, ui) => {
-      /*
-      console.log("this.border");
-      console.log(this.border);
-      console.log('changing position');
-      console.log(event);
-      console.log(ui);
-      */
       this.opacity = 1;
       let position: object = {
-        id: this.imgID,
+        id: this.currentMonth.toString() + this.imgPosition,
+        order: this.imgPosition,
         type: 'position',
         settings: {
           top: ui.position.top,
@@ -131,7 +115,8 @@ export class PictureComponent implements OnInit/*, DoCheck */ {
   onResizeEnd(event: ResizeEvent): void {
     console.log('Element was resized', event);
     let size: object = {
-      id: this.imgID,
+      id: this.currentMonth.toString() + this.imgPosition,
+      order: this.imgPosition,
       type: 'size',
       settings: {
         width: event.rectangle.width + 'px',
@@ -142,7 +127,8 @@ export class PictureComponent implements OnInit/*, DoCheck */ {
     console.log("end top:" + (this.startResizePosition.top - event.rectangle.top));
     console.log("end left:" + (this.startResizePosition.left - event.rectangle.left));
     let position = {
-      id: this.imgID,
+      id: this.currentMonth.toString() + this.imgPosition,
+      order: this.imgPosition,
       type: 'position',
       settings: {
         //take out the difference between starting Resize position and ending resize position
@@ -166,16 +152,9 @@ export class PictureComponent implements OnInit/*, DoCheck */ {
         'width': this.image.settings.size.width,
         'height': this.image.settings.size.height,
         'opacity': this.opacity,
-        'zIndex': this.imgID
+        'zIndex': this.imgPosition
       }
     }
     return;
   };
-
-  getBorderStyle(): any {
-    return {
-      'zIndex': this.imgID
-    }
-    return;
-  }
 }
