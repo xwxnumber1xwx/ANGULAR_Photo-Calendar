@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import * as $ from 'jquery'
+import { ImagesService } from '../../../images.service'
 
 @Component({
   selector: 'app-tools-bar',
@@ -10,13 +11,21 @@ export class ToolsBarComponent implements OnInit {
 
   image: any;
   listAllMonthImages: any;
+  focusSubscription: any;
 
-  constructor() { }
+  constructor(private imagesService: ImagesService) { }
 
   ngOnInit() {
+    this.focusSubscription = this.imagesService.getFocusOn()
+      .subscribe(image => this.setImage(image));
+  }
+
+  ngOnDestroy() {
+    this.focusSubscription.unsubscribe();
   }
 
   setImage(image): void {
+    console.log('setImage()', image);
     this.image = image;
   }
 
@@ -37,8 +46,8 @@ export class ToolsBarComponent implements OnInit {
   }
 
   deleteImage(): void {
-    if (this.image) {
-      this.image.remove();
+    if (this.image && this.image[0]) {
+      this.imagesService.setImageToDelete(this.image[0].id);
     }
   }
 

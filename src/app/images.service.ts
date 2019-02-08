@@ -5,7 +5,34 @@ import { Injectable, EventEmitter } from '@angular/core';
 })
 export class ImagesService {
 
+  imageSettings: EventEmitter<any> = new EventEmitter();
+  focusOn: EventEmitter<any> = new EventEmitter();
+  imageToDelete: EventEmitter<any> = new EventEmitter();
 
   constructor() { }
+
+  setSettings(settings) {
+    this.imageSettings.emit(settings);
+  }
+
+  getSettings(): EventEmitter<any> {
+    return this.imageSettings;
+  }
+
+  setFocus(selectedImage): void {
+    this.focusOn.emit(selectedImage);
+  }
+
+  getFocusOn(): EventEmitter<any> {
+    return this.focusOn;
+  }
+
+  setImageToDelete(image): void {
+    this.imageToDelete.emit(image);
+  }
+
+  getImageToDelete(): EventEmitter<any> {
+    return this.imageToDelete;
+  }
 
 }

@@ -1,5 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
-import { ToolsBarComponent } from './tools-bar/tools-bar.component'
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import * as $ from 'jquery'
 
 @Component({
@@ -8,9 +7,6 @@ import * as $ from 'jquery'
   styleUrls: ['./month-calendar.component.sass']
 })
 export class MonthCalendarComponent implements OnInit {
-
-  @ViewChild(ToolsBarComponent)
-  private toolsBarComponent: ToolsBarComponent;
 
   @Input() date: Date = new Date;
 
@@ -34,7 +30,7 @@ export class MonthCalendarComponent implements OnInit {
   ngAfterViewInit(): void {
     // remove border if the user click outside of the picture
     $(document).mousedown((event) => {
-      if (!($(event.target).hasClass('calendar-images') || $(event.target).hasClass('border'))) {
+      if (!($(event.target).hasClass('calendar-images') || $(event.target).hasClass('border') || $(event.target).hasClass('tools-button'))) {
         $('.border').addClass('not-visible');
       }
     })
@@ -70,16 +66,6 @@ export class MonthCalendarComponent implements OnInit {
   getMonthName(n): string {
     let months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     return months[n];
-  }
-
-  settingsToSend(settings) {
-    this.imageSettings.emit(settings);
-  }
-
-  focusOn(selectedImage) {
-    console.log('focusOn');
-    console.log(selectedImage);
-    this.toolsBarComponent.setImage(selectedImage);
   }
 
 }

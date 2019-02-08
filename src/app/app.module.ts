@@ -11,7 +11,8 @@ import { Image } from './image'
 import { ResizableModule } from 'angular-resizable-element';
 import { EditBarComponent } from './main-calendar/edit-bar/edit-bar.component';
 import { PictureComponent } from './main-calendar/month-calendar/picture/picture.component';
-import { ToolsBarComponent } from './main-calendar/month-calendar/tools-bar/tools-bar.component'
+import { ToolsBarComponent } from './main-calendar/month-calendar/tools-bar/tools-bar.component';
+import { BorderComponent } from './main-calendar/month-calendar/picture/border/border.component'
 
 
 @NgModule({
@@ -22,7 +23,8 @@ import { ToolsBarComponent } from './main-calendar/month-calendar/tools-bar/tool
     MonthCalendarComponent,
     EditBarComponent,
     PictureComponent,
-    ToolsBarComponent
+    ToolsBarComponent,
+    BorderComponent
   ],
   imports: [
     BrowserModule,
