@@ -8,6 +8,7 @@ export class ImagesService {
   imageSettings: EventEmitter<any> = new EventEmitter();
   focusOn: EventEmitter<any> = new EventEmitter();
   imageToDelete: EventEmitter<any> = new EventEmitter();
+  imageSettingsByID: EventEmitter<any> = new EventEmitter();
 
   constructor() { }
 
@@ -17,6 +18,14 @@ export class ImagesService {
 
   getSettings(): EventEmitter<any> {
     return this.imageSettings;
+  }
+
+  setSettingsByID(settings) {
+    this.imageSettingsByID.emit(settings);
+  }
+
+  getSettingsByID(): EventEmitter<any> {
+    return this.imageSettingsByID;
   }
 
   setFocus(selectedImage): void {

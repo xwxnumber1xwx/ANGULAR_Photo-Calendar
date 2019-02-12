@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Image } from '../image'
 import { ImagesService } from '../images.service'
+import { setupTestingRouter } from '@angular/router/testing';
 
 @Component({
   selector: 'app-main-calendar',
@@ -14,6 +15,7 @@ export class MainCalendarComponent implements OnInit {
   currentMonth: number = 0;
   yearsList: number[] = [];
   subscription: any;
+  subscriptionByID: any;
   deleteImageSubscription: any;
 
 
@@ -25,6 +27,9 @@ export class MainCalendarComponent implements OnInit {
   ngOnInit() {
     this.subscription = this.imagesService.getSettings()
       .subscribe(settings => this.updateSettings(settings, this.currentMonth));
+
+      this.subscriptionByID = this.imagesService.getSettingsByID()
+      .subscribe(settings => this.updateSettingsByID(settings, this.currentMonth));
 
     this.deleteImageSubscription = this.imagesService.getImageToDelete()
       .subscribe(id => {
@@ -44,6 +49,7 @@ export class MainCalendarComponent implements OnInit {
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
+    this.subscriptionByID.unsubscribe();
   }
 
   /*createYearList(years) {
@@ -69,14 +75,28 @@ export class MainCalendarComponent implements OnInit {
   UseThisPicture(url: any, currentMonth: number): void {
     let lastImage = this.images[currentMonth].length - 1
     this.images[currentMonth][lastImage].url = url;
+    this.images[currentMonth][lastImage].settings.zindex.zindex = lastImage;
     // set ImageID
     this.images[currentMonth][lastImage].settings['details'] = { month: currentMonth, id: `img_${currentMonth}${lastImage}` }
     this.images[currentMonth].push(new Image);
   };
 
   updateSettings(settings, currentMonth): void {
-    this.images[currentMonth][settings.order].settings[settings.type] = settings.settings;
+      this.images[currentMonth][settings.order].settings[settings.type] = settings.settings;
     //this.images[currentMonth][settings.order].settings['details'] = { month: currentMonth, id: settings.id }
+    console.log('updated: ', this.images[currentMonth]);
+  }
+
+  updateSettingsByID(settings, currentMonth): void {
+    let id = settings.id;
+    this.images.forEach((images, index_images) => {
+      images.forEach((image, index_image) => {
+        if (image.settings.details.id == id) {
+          console.log('changing settings by ID: ', this.images[index_images][index_image]);
+            this.images[index_images][index_image].settings[settings.type] = settings.settings;
+        }
+      });
+    })
   }
 
   deleteImage(id): void {

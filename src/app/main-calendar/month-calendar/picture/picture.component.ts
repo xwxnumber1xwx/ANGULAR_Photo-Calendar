@@ -3,8 +3,8 @@ import * as $ from 'jquery'
 import 'jquery-ui/ui/widgets/draggable';
 import 'jquery-ui/ui/widgets/resizable';
 import { ResizeEvent } from 'angular-resizable-element';
-import { ImagesService } from '../../../images.service'
-import { BorderComponent } from './border/border.component'
+import { ImagesService } from '../../../images.service';
+import { BorderComponent } from './border/border.component';
 
 @Component({
   selector: 'app-picture',
@@ -45,10 +45,11 @@ export class PictureComponent implements OnInit {
       this.borderComponent.showBorder();
     })
 
-    this.editImg();
+    this.dragListeners();
   }
 
-  editImg(): void {
+  //Dragging Listener
+  dragListeners(): void {
     this.picture.draggable();
     this.draggable = true;
     this.picture.on("dragstart", (event, ui) => {
@@ -59,20 +60,22 @@ export class PictureComponent implements OnInit {
     });
     this.picture.on("dragstop", (event, ui) => {
       this.opacity = 1;
-      let position: object = {
-        order: this.imgPosition,
-        type: 'position',
-        settings: {
-          top: ui.position.top,
-          left: ui.position.left,
-          zindex: this.picture.css('zIndex')
-        }
-      };
-      this.imagesService.setSettings(position);
+      this.emitSettings(this.imgPosition, 'position', {top: ui.position.top, left: ui.position.left});
     }
     );
   }
 
+  // send settings to mainCalendarComponent trough imageService
+  emitSettings(imgPosition, type, settings): void {
+    let position: object = {
+      order: imgPosition,
+      type: type,
+      settings: settings
+    };
+    this.imagesService.setSettings(position);
+  }
+
+  //resizing Listener
   onResizeStart(event: ResizeEvent): void {
     this.picture.draggable('destroy');
     // saving the starting resize position
@@ -86,30 +89,15 @@ export class PictureComponent implements OnInit {
 
   onResizeEnd(event: ResizeEvent): void {
     console.log('Element was resized', event);
-    let size: object = {
-      order: this.imgPosition,
-      type: 'size',
-      settings: {
-        width: event.rectangle.width + 'px',
-        height: event.rectangle.height + 'px'
-      }
-    }
-    this.imagesService.setSettings(size);
-    console.log("end top:" + (this.startResizePosition.top - event.rectangle.top));
-    console.log("end left:" + (this.startResizePosition.left - event.rectangle.left));
-    let position = {
-      order: this.imgPosition,
-      type: 'position',
-      settings: {
-        //take out the difference between starting Resize position and ending resize position
-        top: this.image.settings.position.top - (this.startResizePosition.top - event.rectangle.top),
-        left: this.image.settings.position.left - (this.startResizePosition.left - event.rectangle.left),
-        zindex: this.picture.css('zIndex')
-      }
-    };
-    this.imagesService.setSettings(position);
+    let widthRz = event.rectangle.width + 'px';
+    let heightRz = event.rectangle.height + 'px';
+    this.emitSettings(this.imgPosition, 'size', {width: widthRz, left: heightRz});
+
+    let posTop = this.image.settings.position.top - (this.startResizePosition.top - event.rectangle.top);
+    let posLeft = this.image.settings.position.left - (this.startResizePosition.left - event.rectangle.left);
+    this.emitSettings(this.imgPosition, 'position', {top: posTop, left: posLeft});
     if (this.draggable) {
-      this.editImg();
+      this.dragListeners();
     };
   }
 
@@ -123,7 +111,8 @@ export class PictureComponent implements OnInit {
         'width': this.image.settings.size.width,
         'height': this.image.settings.size.height,
         'opacity': this.opacity,
-        'zIndex': this.imgPosition
+        'zIndex': this.image.settings.zindex.zindex,
+        'transform': this.image.settings.transform.rotation
       }
     }
     return;

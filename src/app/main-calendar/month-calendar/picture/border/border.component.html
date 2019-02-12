@@ -1,1 +1,7 @@
-<div id="border_{{imgID}}" class="border not-visible"></div>
+<div id="border_{{imgID}}" class="border not-visible focus-on">
+    <app-border-square class="square square-left"></app-border-square>
+    <app-border-square class="square square-top"></app-border-square><span class="line focus-on"></span>
+    <app-border-rotation-button class="rotation" [imgID]="imgID" [imgPosition]='imgPosition'></app-border-rotation-button>
+    <app-border-square class="square square-right"></app-border-square>
+    <app-border-square class="square square-bottom"></app-border-square>
+</div>

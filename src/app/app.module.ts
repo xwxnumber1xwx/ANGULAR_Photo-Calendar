@@ -12,7 +12,9 @@ import { ResizableModule } from 'angular-resizable-element';
 import { EditBarComponent } from './main-calendar/edit-bar/edit-bar.component';
 import { PictureComponent } from './main-calendar/month-calendar/picture/picture.component';
 import { ToolsBarComponent } from './main-calendar/month-calendar/tools-bar/tools-bar.component';
-import { BorderComponent } from './main-calendar/month-calendar/picture/border/border.component'
+import { BorderComponent } from './main-calendar/month-calendar/picture/border/border.component';
+import { BorderSquareComponent } from './main-calendar/month-calendar/picture/border/border-square/border-square.component';
+import { BorderRotationButtonComponent } from './main-calendar/month-calendar/picture/border/border-rotation-button/border-rotation-button.component'
 
 
 @NgModule({
@@ -24,7 +26,9 @@ import { BorderComponent } from './main-calendar/month-calendar/picture/border/b
     EditBarComponent,
     PictureComponent,
     ToolsBarComponent,
-    BorderComponent
+    BorderComponent,
+    BorderSquareComponent,
+    BorderRotationButtonComponent
   ],
   imports: [
     BrowserModule,

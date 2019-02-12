@@ -51,8 +51,20 @@ export class ToolsBarComponent implements OnInit {
     }
   }
 
+  sendSettings(JqueryElement: $, zIndex) {
+    let position = {
+      id: JqueryElement.attr('id'),
+      type: 'zindex',
+      settings: {
+        zindex: parseInt(zIndex)
+      }
+    }
+    console.log('position emitted: ', position);
+    this.imagesService.setSettingsByID(position);
+  }
 
   moveForward(): void {
+    console.log('moving forward', this.image);
     if (this.image) {
       this.getImages();
       let oldZIndex = this.image.css('zIndex');
@@ -61,9 +73,11 @@ export class ToolsBarComponent implements OnInit {
         let nextElement = this.getElementwith_zIndex(this.listAllMonthImages, +oldZIndex + 1);
         if (nextElement) {
           nextElement.style.zIndex = oldZIndex;
+          this.sendSettings($(nextElement), oldZIndex);
         }
         oldZIndex++;
         this.image.css('zIndex', oldZIndex);
+        this.sendSettings(this.image, oldZIndex);
       }
     }
   }
@@ -72,17 +86,21 @@ export class ToolsBarComponent implements OnInit {
     if (this.image) {
       this.getImages();
       let oldZIndex = this.image.css('zIndex');
+      console.log(' this.listAllMonthImages', this.listAllMonthImages);
       let lowestZIndex = this.listAllMonthImages[0].style.zIndex;
+      console.log('oldZIndex', oldZIndex);
+      console.log('lowestZIndex', lowestZIndex);
       if (oldZIndex > lowestZIndex) {
-        let comeFirstElement = this.getElementwith_zIndex(this.listAllMonthImages, +oldZIndex - 1);
+        let comeFirstElement = this.getElementwith_zIndex(this.listAllMonthImages, parseInt(oldZIndex) - 1);
         if (comeFirstElement) {
           comeFirstElement.style.zIndex = oldZIndex;
+          this.sendSettings($(comeFirstElement), oldZIndex);
         }
         oldZIndex--;
         this.image.css('zIndex', oldZIndex);
+        this.sendSettings(this.image, oldZIndex);
       }
     }
-
   }
 
 }

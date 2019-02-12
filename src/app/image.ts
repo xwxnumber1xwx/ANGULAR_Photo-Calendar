@@ -3,8 +3,10 @@ export class Image {
     settings = {
       position: {
         top: 0,
-        left: 0,
-        zindex: 'initial'
+        left: 0
+      },
+      zindex: {
+        zindex: 0
       },
       size: {
         width: 'inherit',
@@ -13,6 +15,9 @@ export class Image {
       details: {
         month: 0,
         id: 'img_'
+      },
+      transform: {
+        rotation: 'rotate(0deg)'
       }
     }
 }

@@ -9,6 +9,7 @@ import * as $ from 'jquery'
 export class BorderComponent implements OnInit {
 
   @Input() imgID: string;
+  @Input() imgPosition: number;
 
   border: any;
   picture: any;
@@ -51,6 +52,7 @@ export class BorderComponent implements OnInit {
       this.border.style.top = `${rectPicture.top}px`;
       this.border.style.width = this.picture.offsetWidth + 'px';
       this.border.style.height = this.picture.offsetHeight + 'px';
+      this.border.style.transform = this.picture.style.transform;
     }
   }
 
