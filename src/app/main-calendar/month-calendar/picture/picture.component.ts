@@ -22,6 +22,7 @@ export class PictureComponent implements OnInit {
   private borderComponent: BorderComponent
 
   picture: any;
+  pictureContainer: any;
   draggable: boolean = false;
 
   startResizePosition: any = {
@@ -39,28 +40,41 @@ export class PictureComponent implements OnInit {
 
   ngAfterViewInit(): void {
     this.picture = $(`#${this.imgID}`);
-
+    this.pictureContainer = $(`#container_${this.imgID}`);
     this.picture.mousedown((event) => {
+      console.log('mouse Down', event);
+      event.preventDefault();
       this.imagesService.setFocus(this.picture);
       this.borderComponent.showBorder();
     })
 
     this.dragListeners();
+
+    /*this.picture.dblclick((event) => {
+      let transform = this.picture.css('transform');
+      this.picture.css('transform', 'rotate(0deg)');
+      this.borderComponent.bindBorderPicture();
+    })
+    */
   }
 
   //Dragging Listener
   dragListeners(): void {
-    this.picture.draggable();
+    //container of image must be draggable and not the image otherwise you have problems width CSS:transform
+    // Jquery and transform are not compatible!!!
+    this.pictureContainer.draggable();
     this.draggable = true;
-    this.picture.on("dragstart", (event, ui) => {
+    this.pictureContainer.on("dragstart", (event, ui) => {
+      console.log('event start', event);
+      console.log('ui start', ui);
       this.opacity = 0.7;
     });
-    this.picture.on("drag", (event, ui) => {
+    this.pictureContainer.on("drag", (event, ui) => {
       this.borderComponent.bindBorderPicture();
     });
-    this.picture.on("dragstop", (event, ui) => {
+    this.pictureContainer.on("dragstop", (event, ui) => {
       this.opacity = 1;
-      this.emitSettings(this.imgPosition, 'position', {top: ui.position.top, left: ui.position.left});
+      this.emitSettings(this.imgPosition, 'position', { top: ui.position.top, left: ui.position.left });
     }
     );
   }
@@ -77,7 +91,7 @@ export class PictureComponent implements OnInit {
 
   //resizing Listener
   onResizeStart(event: ResizeEvent): void {
-    this.picture.draggable('destroy');
+    this.pictureContainer.draggable('destroy');
     // saving the starting resize position
     this.startResizePosition.top = event.rectangle.top;
     this.startResizePosition.left = event.rectangle.left;
@@ -91,30 +105,43 @@ export class PictureComponent implements OnInit {
     console.log('Element was resized', event);
     let widthRz = event.rectangle.width + 'px';
     let heightRz = event.rectangle.height + 'px';
-    this.emitSettings(this.imgPosition, 'size', {width: widthRz, left: heightRz});
+    this.emitSettings(this.imgPosition, 'size', { width: widthRz, height: heightRz });
 
     let posTop = this.image.settings.position.top - (this.startResizePosition.top - event.rectangle.top);
     let posLeft = this.image.settings.position.left - (this.startResizePosition.left - event.rectangle.left);
-    this.emitSettings(this.imgPosition, 'position', {top: posTop, left: posLeft});
+    this.emitSettings(this.imgPosition, 'position', { top: posTop, left: posLeft });
     if (this.draggable) {
       this.dragListeners();
     };
   }
 
   // image position
-  getStyle(): any {
+  getStylePicture(): any {
     if (this.image.settings) {
       return {
-        'position': this.cssPosition,
-        'left': this.image.settings.position.left + 'px',
-        'top': this.image.settings.position.top + 'px',
+        'zIndex': this.image.settings.zindex.zindex,
         'width': this.image.settings.size.width,
         'height': this.image.settings.size.height,
         'opacity': this.opacity,
-        'zIndex': this.image.settings.zindex.zindex,
         'transform': this.image.settings.transform.rotation
+
       }
     }
     return;
   };
+
+  getStyleContainer(): any {
+    if (this.image.settings) {
+      return {
+        'zIndex': this.image.settings.zindex.zindex,
+        'left': this.image.settings.position.left + 'px',
+        'top': this.image.settings.position.top + 'px',
+        'position': this.cssPosition,
+        'width': this.image.settings.size.width,
+        'height': this.image.settings.size.height,
+      }
+    }
+    return;
+  }
+
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef } from '@angular/core';
 import * as $ from 'jquery'
 import { ImagesService } from '../../../images.service'
 
@@ -9,7 +9,7 @@ import { ImagesService } from '../../../images.service'
 })
 export class ToolsBarComponent implements OnInit {
 
-  image: any;
+  image: HTMLImageElement;
   listAllMonthImages: any;
   focusSubscription: any;
 
@@ -26,7 +26,11 @@ export class ToolsBarComponent implements OnInit {
 
   setImage(image): void {
     console.log('setImage()', image);
-    this.image = image;
+    if (image instanceof $ ) {
+      this.image = image[0];
+    } else {
+      this.image = image;
+    }
   }
 
   getElementwith_zIndex(images, zIndex): any {
@@ -46,14 +50,14 @@ export class ToolsBarComponent implements OnInit {
   }
 
   deleteImage(): void {
-    if (this.image && this.image[0]) {
-      this.imagesService.setImageToDelete(this.image[0].id);
+    if (this.image) {
+      this.imagesService.setImageToDelete(this.image.getAttribute('id'));
     }
   }
 
-  sendSettings(JqueryElement: $, zIndex) {
+  sendSettings(element, zIndex) {
     let position = {
-      id: JqueryElement.attr('id'),
+      id: element.getAttribute('id'),
       type: 'zindex',
       settings: {
         zindex: parseInt(zIndex)
@@ -64,19 +68,16 @@ export class ToolsBarComponent implements OnInit {
   }
 
   moveForward(): void {
-    console.log('moving forward', this.image);
     if (this.image) {
       this.getImages();
-      let oldZIndex = this.image.css('zIndex');
+      let oldZIndex: number = +this.image.style.zIndex;
       let highestZIndex = this.listAllMonthImages[this.listAllMonthImages.length - 1].style.zIndex;
       if (oldZIndex < highestZIndex) {
         let nextElement = this.getElementwith_zIndex(this.listAllMonthImages, +oldZIndex + 1);
         if (nextElement) {
-          nextElement.style.zIndex = oldZIndex;
-          this.sendSettings($(nextElement), oldZIndex);
+          this.sendSettings(nextElement, oldZIndex);
         }
         oldZIndex++;
-        this.image.css('zIndex', oldZIndex);
         this.sendSettings(this.image, oldZIndex);
       }
     }
@@ -85,19 +86,14 @@ export class ToolsBarComponent implements OnInit {
   moveBehind(): void {
     if (this.image) {
       this.getImages();
-      let oldZIndex = this.image.css('zIndex');
-      console.log(' this.listAllMonthImages', this.listAllMonthImages);
+      let oldZIndex: number = +this.image.style.zIndex;
       let lowestZIndex = this.listAllMonthImages[0].style.zIndex;
-      console.log('oldZIndex', oldZIndex);
-      console.log('lowestZIndex', lowestZIndex);
       if (oldZIndex > lowestZIndex) {
-        let comeFirstElement = this.getElementwith_zIndex(this.listAllMonthImages, parseInt(oldZIndex) - 1);
+        let comeFirstElement = this.getElementwith_zIndex(this.listAllMonthImages, +oldZIndex - 1);
         if (comeFirstElement) {
-          comeFirstElement.style.zIndex = oldZIndex;
-          this.sendSettings($(comeFirstElement), oldZIndex);
+          this.sendSettings(comeFirstElement, oldZIndex);
         }
         oldZIndex--;
-        this.image.css('zIndex', oldZIndex);
         this.sendSettings(this.image, oldZIndex);
       }
     }

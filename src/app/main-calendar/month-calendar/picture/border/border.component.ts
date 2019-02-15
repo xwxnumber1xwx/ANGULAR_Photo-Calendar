@@ -47,11 +47,18 @@ export class BorderComponent implements OnInit {
 
   bindBorderPicture(): void {
     if (this.border && this.picture) {
+      // prevent Issue on border Position
+      let rot = this.picture.style.transform;
+      this.picture.style.transform = 'rotate(0deg)';
+
       var rectPicture = this.picture.getBoundingClientRect();
       this.border.style.left = `${rectPicture.left}px`;
       this.border.style.top = `${rectPicture.top}px`;
       this.border.style.width = this.picture.offsetWidth + 'px';
       this.border.style.height = this.picture.offsetHeight + 'px';
+
+      // restore rotation
+      this.picture.style.transform = rot;
       this.border.style.transform = this.picture.style.transform;
     }
   }
