@@ -30,7 +30,7 @@ export class MonthCalendarComponent implements OnInit {
   ngAfterViewInit(): void {
     // remove border if the user click outside of the picture
     $(document).mousedown((event) => {
-      if (!($(event.target).hasClass('calendar-images') || $(event.target).hasClass('border') || $(event.target).hasClass('tools-button') || $(event.target).hasClass('focus-on'))) {
+      if (!($(event.target).hasClass('calendar-images') || $(event.target).hasClass('border') || $(event.target).hasClass('tools-button') || $(event.target).hasClass('focus-on') || $(event.target.parentNode).hasClass('focus-on'))) {
         $('.border').addClass('not-visible');
       }
     })

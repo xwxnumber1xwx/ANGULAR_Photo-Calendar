@@ -23,7 +23,6 @@ export class PictureComponent implements OnInit {
 
   picture: any;
   pictureContainer: any;
-  draggable: boolean = false;
 
   startResizePosition: any = {
     left: 0,
@@ -63,7 +62,6 @@ export class PictureComponent implements OnInit {
     //container of image must be draggable and not the image otherwise you have problems width CSS:transform
     // Jquery and transform are not compatible!!!
     this.pictureContainer.draggable();
-    this.draggable = true;
     this.pictureContainer.on("dragstart", (event, ui) => {
       console.log('event start', event);
       console.log('ui start', ui);
@@ -87,32 +85,6 @@ export class PictureComponent implements OnInit {
       settings: settings
     };
     this.imagesService.setSettings(position);
-  }
-
-  //resizing Listener
-  onResizeStart(event: ResizeEvent): void {
-    this.pictureContainer.draggable('destroy');
-    // saving the starting resize position
-    this.startResizePosition.top = event.rectangle.top;
-    this.startResizePosition.left = event.rectangle.left;
-  }
-
-  onResizing(event: ResizeEvent): void {
-    this.borderComponent.setBorder(event.rectangle.top, event.rectangle.left, event.rectangle.width, event.rectangle.height);
-  }
-
-  onResizeEnd(event: ResizeEvent): void {
-    console.log('Element was resized', event);
-    let widthRz = event.rectangle.width + 'px';
-    let heightRz = event.rectangle.height + 'px';
-    this.emitSettings(this.imgPosition, 'size', { width: widthRz, height: heightRz });
-
-    let posTop = this.image.settings.position.top - (this.startResizePosition.top - event.rectangle.top);
-    let posLeft = this.image.settings.position.left - (this.startResizePosition.left - event.rectangle.left);
-    this.emitSettings(this.imgPosition, 'position', { top: posTop, left: posLeft });
-    if (this.draggable) {
-      this.dragListeners();
-    };
   }
 
   // image position

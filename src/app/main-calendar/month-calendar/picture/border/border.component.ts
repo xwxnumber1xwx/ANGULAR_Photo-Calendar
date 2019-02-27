@@ -1,5 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { ResizeDirective } from '../../../../resize.directive';
 import * as $ from 'jquery'
+import { from } from 'rxjs';
+import { ImagesService } from '../../../../images.service';
 
 @Component({
   selector: 'app-border',
@@ -8,13 +11,19 @@ import * as $ from 'jquery'
 })
 export class BorderComponent implements OnInit {
 
+  @Input() image:any;
   @Input() imgID: string;
   @Input() imgPosition: number;
 
   border: any;
   picture: any;
 
-  constructor() { }
+  startResizePosition: any = {
+    left: 0,
+    top: 0
+  }
+
+  constructor(private imagesService: ImagesService) { }
 
   ngOnInit() {
   }
@@ -31,6 +40,40 @@ export class BorderComponent implements OnInit {
       this.bindBorderPicture();
     });
     this.bindBorderPicture();
+  }
+
+    // send settings to mainCalendarComponent trough imageService
+    emitSettings(imgPosition, type, settings): void {
+      let position: object = {
+        order: imgPosition,
+        type: type,
+        settings: settings
+      };
+      this.imagesService.setSettings(position);
+    }
+
+  //resizing Listener
+  onResizeStart(event): void {
+    // saving the starting resize position
+    this.startResizePosition.top = event.top;
+    this.startResizePosition.left = event.left;
+  }
+
+  onResizing(event): void {
+    console.log('resizing');
+    //this.setBorder(event.top, event.left, event.width, event.height);
+    this.bindBorderPicture()
+  }
+
+  onResizeEnd(event): void {
+    console.log('Element was resized', event);
+    let widthRz = event.width + 'px';
+    let heightRz = event.height + 'px';
+    this.emitSettings(this.imgPosition, 'size', { width: widthRz, height: heightRz });
+
+    let posTop = this.image.settings.position.top - (this.startResizePosition.top - event.top);
+    let posLeft = this.image.settings.position.left - (this.startResizePosition.left - event.left);
+    this.emitSettings(this.imgPosition, 'position', { top: posTop, left: posLeft });
   }
 
   showBorder(): void {

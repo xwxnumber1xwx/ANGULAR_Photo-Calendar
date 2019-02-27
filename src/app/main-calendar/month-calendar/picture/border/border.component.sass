@@ -7,10 +7,13 @@
 .not-visible
       visibility: hidden
 
-.square
+.dot
       position: absolute
       transform: translate(-50%, -50%)
       pointer-events: initial
+      background: blue
+      height: 20px
+      width: 20px
 
 .square-left
       left: -2.5px
@@ -27,6 +30,32 @@
 .square-bottom
       bottom: -22.5px
       left: 50%
+
+
+.circle
+      border-radius: 10px
+
+.bottom-right
+      bottom: -22.5px
+      left: 100%
+      cursor: nw-resize
+
+.bottom-left
+      bottom: -22.5px
+      left: -2.5px
+      cursor: ne-resize
+
+.top-right
+      top: -2.5px
+      left: 100%
+      cursor: ne-resize
+
+.top-left
+      top: -2.5px
+      left: -2.5px
+      cursor: nw-resize
+
+
 
 .line
     position: absolute

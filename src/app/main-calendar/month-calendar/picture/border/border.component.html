@@ -1,7 +1,11 @@
 <div id="border_{{imgID}}" class="border not-visible focus-on">
-    <app-border-square class="square square-left"></app-border-square>
-    <app-border-square class="square square-top"></app-border-square><span class="line focus-on"></span>
+    <app-border-square class="dot square-left"></app-border-square>
+    <app-border-square class="dot square-top"></app-border-square><span class="line focus-on"></span>
     <app-border-rotation-button class="rotation" [imgID]="imgID" [imgPosition]='imgPosition'></app-border-rotation-button>
-    <app-border-square class="square square-right"></app-border-square>
-    <app-border-square class="square square-bottom"></app-border-square>
+    <app-border-square class="dot square-right"></app-border-square>
+    <app-border-square class="dot square-bottom"></app-border-square>
+    <app-border-square class="dot circle bottom-right" appResize [cornerPosition]="{top: false, bottom: true, right: true, left: false}" elementIDToResize="{{imgID}}" (resizeStart)="onResizeStart($event)" (resizing)="onResizing($event)" (resizeEnd)="onResizeEnd($event)"></app-border-square>
+    <app-border-square class="dot circle bottom-left" appResize [cornerPosition]="{top: false, bottom: true, right: false, left: true}" elementIDToResize="{{imgID}}" (resizeStart)="onResizeStart($event)" (resizing)="onResizing($event)" (resizeEnd)="onResizeEnd($event)"></app-border-square>
+    <app-border-square class="dot circle top-right" appResize [cornerPosition]="{top: true, bottom: false, right: true, left: false}" elementIDToResize="{{imgID}}" (resizeStart)="onResizeStart($event)" (resizing)="onResizing($event)" (resizeEnd)="onResizeEnd($event)"></app-border-square>
+    <app-border-square class="dot circle top-left" appResize [cornerPosition]="{top: true, bottom: false, right: false, left: true}" elementIDToResize="{{imgID}}" (resizeStart)="onResizeStart($event)" (resizing)="onResizing($event)" (resizeEnd)="onResizeEnd($event)"></app-border-square>
 </div>
