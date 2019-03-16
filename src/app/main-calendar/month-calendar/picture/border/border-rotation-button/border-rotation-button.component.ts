@@ -17,6 +17,7 @@ export class BorderRotationButtonComponent implements OnInit {
   prevClientX: any;
   picture: any;
   listenerActivated: boolean = false;
+  transform: number;
 
   constructor(private imagesService: ImagesService) { }
 
@@ -28,6 +29,14 @@ export class BorderRotationButtonComponent implements OnInit {
     this.picture = document.getElementById(`${this.imgID}`);
     this.rotationButton = document.getElementById(`rotation_${this.imgID}`);
     this.rotationButton.addEventListener("mousedown", (event) => {
+
+      //get rotation
+      let tr = document.getElementById(`${this.imgID}`).style.transform;
+      //get only value of rotation
+      let res = tr.split('rotate(');
+      res = res[1].split('deg)');
+      this.transform = parseInt(res[0]);
+
       this.listenerActivated = true;
       event.preventDefault();
       this.prevClientX = event.clientX;
@@ -53,14 +62,14 @@ export class BorderRotationButtonComponent implements OnInit {
   }
 
   getClientX = (event): void => {
-    this.moveIt(event, this.prevClientX);
+    this.moveIt(event, this.prevClientX, this.transform);
   }
 
-  moveIt(event, prevClientX): void {
+  moveIt(event, prevClientX, transform): void {
     let border = document.getElementById(`border_${this.imgID}`);
-    //let alredyRotated = this.picture.style.getPropertyValue("transform")
+    console.log('transform value: ', transform);
     if (this.picture) {
-      let cx = (event.clientX - prevClientX) / 4;
+      let cx = ((event.clientX - prevClientX) / 4) +  + transform;
       this.picture.style.transform = `rotate(${cx}deg)`;
       border.style.transform = `rotate(${cx}deg)`;
     }
