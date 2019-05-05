@@ -16,7 +16,7 @@ export class BorderComponent implements OnInit {
   @Input() imgPosition: number;
 
   border: any;
-  picture: any;
+  mainPhotoContainer: any;
 
   startResizePosition: any = {
     left: 0,
@@ -29,8 +29,8 @@ export class BorderComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
-    this.picture = document.getElementById(`${this.imgID}`);
     this.border = document.getElementById(`border_${this.imgID}`);
+    this.mainPhotoContainer =  document.getElementById(`photo-module_${this.imgID}`).parentElement;
 
     window.addEventListener('scroll', (event) => {
       this.bindBorderPicture();
@@ -89,20 +89,20 @@ export class BorderComponent implements OnInit {
   }
 
   bindBorderPicture(): void {
-    if (this.border && this.picture) {
+    if (this.border && this.mainPhotoContainer) {
       // prevent Issue on border Position
-      let rot = this.picture.style.transform;
-      this.picture.style.transform = 'rotate(0deg)';
+      let rot = this.mainPhotoContainer.style.transform;
+      this.mainPhotoContainer.style.transform = 'rotate(0deg)';
 
-      var rectPicture = this.picture.getBoundingClientRect();
+      var rectPicture = this.mainPhotoContainer.getBoundingClientRect();
       this.border.style.left = `${rectPicture.left}px`;
       this.border.style.top = `${rectPicture.top}px`;
-      this.border.style.width = this.picture.offsetWidth + 'px';
-      this.border.style.height = this.picture.offsetHeight + 'px';
+      this.border.style.width = this.mainPhotoContainer.offsetWidth + 'px';
+      this.border.style.height = this.mainPhotoContainer.offsetHeight + 'px';
 
       // restore rotation
-      this.picture.style.transform = rot;
-      this.border.style.transform = this.picture.style.transform;
+      this.mainPhotoContainer.style.transform = rot;
+      this.border.style.transform = this.mainPhotoContainer.style.transform;
     }
   }
 

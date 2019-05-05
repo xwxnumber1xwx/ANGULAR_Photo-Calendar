@@ -15,7 +15,7 @@ export class BorderRotationButtonComponent implements OnInit {
   rotationButton: any;
   example: any;
   prevClientX: any;
-  picture: any;
+  mainPhotoContainer: any;
   listenerActivated: boolean = false;
   transform: number;
 
@@ -26,7 +26,7 @@ export class BorderRotationButtonComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
-    this.picture = document.getElementById(`${this.imgID}`);
+    this.mainPhotoContainer =  document.getElementById(`photo-module_${this.imgID}`).parentElement;
     this.rotationButton = document.getElementById(`rotation_${this.imgID}`);
     this.rotationButton.addEventListener("mousedown", (event) => {
 
@@ -50,7 +50,7 @@ export class BorderRotationButtonComponent implements OnInit {
           order: this.imgPosition,
           type: 'transform',
           settings: {
-            rotation: this.picture.style.transform
+            rotation: this.mainPhotoContainer.style.transform
           }
         }
         this.imagesService.setSettings(position)
@@ -68,9 +68,9 @@ export class BorderRotationButtonComponent implements OnInit {
   moveIt(event, prevClientX, transform): void {
     let border = document.getElementById(`border_${this.imgID}`);
     console.log('transform value: ', transform);
-    if (this.picture) {
+    if (this.mainPhotoContainer) {
       let cx = ((event.clientX - prevClientX) / 4) +  + transform;
-      this.picture.style.transform = `rotate(${cx}deg)`;
+      this.mainPhotoContainer.style.transform = `rotate(${cx}deg)`;
       border.style.transform = `rotate(${cx}deg)`;
     }
   }

@@ -33,7 +33,8 @@ export class MonthCalendarComponent implements OnInit {
       if (!($(event.target).hasClass('calendar-images') || $(event.target).hasClass('border') || $(event.target).hasClass('tools-button') || $(event.target).hasClass('focus-on') || $(event.target.parentNode).hasClass('focus-on'))) {
         $('.border').addClass('not-visible');
       }
-    })
+    });
+
   }
 
   createCalendarDate(): any {
@@ -66,6 +67,22 @@ export class MonthCalendarComponent implements OnInit {
   getMonthName(n): string {
     let months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     return months[n];
+  }
+
+  getStyleContainer(image): any {
+    if (image.settings) {
+      return {
+        'overflow': 'hidden',
+        'position': 'absolute',
+        'zIndex': image.settings.zindex.zindex,
+        'left': image.settings.position.left + 'px',
+        'top': image.settings.position.top + 'px',
+        'width': image.settings.size.width,
+        'height': image.settings.size.height
+        //'transform': image.settings.transform.rotation
+      }
+    }
+    return;
   }
 
 }

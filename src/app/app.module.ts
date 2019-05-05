@@ -15,7 +15,8 @@ import { ToolsBarComponent } from './main-calendar/month-calendar/tools-bar/tool
 import { BorderComponent } from './main-calendar/month-calendar/picture/border/border.component';
 import { BorderSquareComponent } from './main-calendar/month-calendar/picture/border/border-square/border-square.component';
 import { BorderRotationButtonComponent } from './main-calendar/month-calendar/picture/border/border-rotation-button/border-rotation-button.component';
-import { ResizeDirective } from './resize.directive'
+import { ResizeDirective } from './resize.directive';
+import { CropDirective } from './crop.directive'
 
 
 @NgModule({
@@ -30,7 +31,8 @@ import { ResizeDirective } from './resize.directive'
     BorderComponent,
     BorderSquareComponent,
     BorderRotationButtonComponent,
-    ResizeDirective
+    ResizeDirective,
+    CropDirective
   ],
   imports: [
     BrowserModule,

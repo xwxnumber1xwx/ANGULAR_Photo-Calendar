@@ -1,10 +1,9 @@
 import { Directive, Input, HostListener, Output, EventEmitter } from '@angular/core';
-import * as $ from 'jquery';
 
 @Directive({
-  selector: '[appResize]'
+  selector: '[appCrop]'
 })
-export class ResizeDirective {
+export class CropDirective {
 
   @Input() cornerPosition = {
     top: false,
@@ -12,11 +11,13 @@ export class ResizeDirective {
     left: false,
     right: false
   }
-  @Input() elementIDToResize: string;
 
-  @Output() resizeStart: EventEmitter<any> = new EventEmitter<any>();
-  @Output() resizing: EventEmitter<any> = new EventEmitter<any>();
-  @Output() resizeEnd: EventEmitter<any> = new EventEmitter<any>();
+  @Input() elementIDToCrop: string;
+
+  @Output() cropStart: EventEmitter<any> = new EventEmitter<any>();
+  @Output() cropping: EventEmitter<any> = new EventEmitter<any>();
+  @Output() cropEnd: EventEmitter<any> = new EventEmitter<any>();
+
 
   id: string;
   ratio: number;
@@ -38,8 +39,7 @@ export class ResizeDirective {
   @HostListener('mousedown', ['$event']) onmousedown(evt): void {
     evt.preventDefault();
     this.active = true;
-    const el: Element = document.getElementById(this.elementIDToResize).parentElement;
-    console.log('el', el )
+    let el: Element = document.getElementById(this.elementIDToCrop);
     this.original_width = parseFloat(getComputedStyle(el, null).getPropertyValue('width').replace('px', ''));
     this.original_height = parseFloat(getComputedStyle(el, null).getPropertyValue('height').replace('px', ''));
     this.original_x = parseFloat(getComputedStyle(el.parentElement, null).getPropertyValue('left').replace('px', ''));
@@ -55,35 +55,33 @@ export class ResizeDirective {
       width: this.newWidth,
       height: this.newHeight
     }
-    this.resizeStart.emit(position);
-    // disable drag when resizing
-    $(el).draggable('destroy');
+    this.cropStart.emit(position);
     document.addEventListener('mousemove', this.getElement);
   }
 
   @HostListener('document:mouseup', ['event']) onmouseup(): void {
     document.removeEventListener('mousemove', this.getElement);
     if (this.active) {
-      this.stopResize();
+      this.stopCropping();
     }
   }
 
   getElement = (event: MouseEvent): void => {
-    this.resize(event, this.elementIDToResize, this.cornerPosition, this.original_mouse_x, this.original_width, this.original_x, this.original_y)
+    this.crop(event, this.elementIDToCrop, this.cornerPosition, this.original_mouse_x, this.original_width, this.original_x, this.original_y)
   }
 
   setRatio(el): void {
-    const height = el.getBoundingClientRect().height;
-    const width = el.getBoundingClientRect().width;
+    let height = el.getBoundingClientRect().height;
+    let width = el.getBoundingClientRect().width;
     this.ratio = width / height;
   }
 
-  resize(event: MouseEvent, id, cornerPosition, original_mouse_x, original_width, original_x, original_y): void {
+  crop(event: MouseEvent, id, cornerPosition, original_mouse_x, original_width, original_x, original_y): void {
     if ((cornerPosition.top || cornerPosition.bottom) && (cornerPosition.right || cornerPosition.left)) {
       if (id) {
-        const element = document.getElementById(id).parentElement
-        console.log('element', element);
+        let element = document.getElementById(id);
         if (element) {
+
           // set ratio
           if (!this.ratio) {
             this.setRatio(element);
@@ -93,17 +91,17 @@ export class ResizeDirective {
           } else if (cornerPosition.bottom && cornerPosition.left) {
             this.newWidth = original_width - (event.pageX - original_mouse_x);
             this.newLeft = original_x + (event.pageX - original_mouse_x);
-            element.style.left = this.newLeft + 'px';
+            element.parentElement.style.left = this.newLeft + 'px';
           } else if (cornerPosition.top && cornerPosition.left) {
             this.newWidth = original_width - (event.pageX - original_mouse_x);
             this.newTop = original_y + (event.pageX - original_mouse_x);
-            element.style.top = this.newTop + 'px';
+            element.parentElement.style.top = this.newTop + 'px';
             this.newLeft = original_x + (event.pageX - original_mouse_x);
-            element.style.left = this.newLeft + 'px';
+            element.parentElement.style.left = this.newLeft + 'px';
           } else if (cornerPosition.top && cornerPosition.right) {
             this.newWidth = original_width + (event.pageX - original_mouse_x);
             this.newTop = original_y - (event.pageX - original_mouse_x);
-            element.style.top = this.newTop + 'px'
+            element.parentElement.style.top = this.newTop + 'px'
           }
           //this.newHeight = this.newWidth / this.ratio;
           this.newHeight = 'auto';
@@ -122,23 +120,21 @@ export class ResizeDirective {
             height: this.newHeight
           }
 
-          this.resizing.emit(position);
-
+          this.cropping.emit(position);
         }
       }
     }
   }
 
-  stopResize(): void {
+  stopCropping(): void {
     let position = {
       left: this.newLeft,
       top: this.newTop,
       width: this.newWidth,
       height: this.newHeight
     }
-    this.resizeEnd.emit(position);
+    this.cropEnd.emit(position);
     this.active = false;
-    $('#' + this.elementIDToResize).parent().draggable();
   };
 
 

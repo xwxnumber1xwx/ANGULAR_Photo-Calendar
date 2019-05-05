@@ -3,10 +3,10 @@
 </div>
 
 <div class="calendar-border">
-  <div class="photo-container">
-    <span *ngFor="let image of images; let i = index">
-      <app-picture class="calendar-photo" *ngIf="image.url" [image]="image" [imgPosition]="i" [imgID]="image.settings.details.id" [currentMonth]="currentMonth"></app-picture>
-    </span>
+  <div class="photos-container">
+    <div *ngFor="let image of images let i = index" [ngStyle]="getStyleContainer(image)">
+      <app-picture id="photo-module_{{image.settings.details.id}}" class="calendar-photo" *ngIf="image.url" [image]="image" [imgPosition]="i" [imgID]="image.settings.details.id" [currentMonth]="currentMonth"></app-picture>
+    </div>
   </div>
   <div class="month-container">
     <h2 class="calendar-year">{{monthName}} {{year}}</h2>

@@ -1,8 +1,7 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
-import * as $ from 'jquery'
+import * as $ from 'jquery';
 import 'jquery-ui/ui/widgets/draggable';
 import 'jquery-ui/ui/widgets/resizable';
-import { ResizeEvent } from 'angular-resizable-element';
 import { ImagesService } from '../../../images.service';
 import { BorderComponent } from './border/border.component';
 
@@ -19,17 +18,18 @@ export class PictureComponent implements OnInit {
   @Input() imgID: string;
 
   @ViewChild(BorderComponent)
-  private borderComponent: BorderComponent
+  private borderComponent: BorderComponent;
 
   picture: any;
   pictureContainer: any;
+  mainPhotoContainer: any;
 
   startResizePosition: any = {
     left: 0,
     top: 0
-  }
-  cssPosition: string = 'absolute';
-  opacity: number = 1;
+  };
+  cssPosition = 'absolute';
+  opacity = 1;
 
   constructor(private imagesService: ImagesService) {
   }
@@ -39,38 +39,37 @@ export class PictureComponent implements OnInit {
 
   ngAfterViewInit(): void {
     this.picture = $(`#${this.imgID}`);
+    if (this.picture) {
+      this.mainPhotoContainer = $(`#photo-module_${this.imgID}`).parent();
+      console.log('mainPhotoContainer', this.mainPhotoContainer);
+    }
     this.pictureContainer = $(`#container_${this.imgID}`);
     this.picture.mousedown((event) => {
       console.log('mouse Down', event);
       event.preventDefault();
+      // set focus on this image for borders
       this.imagesService.setFocus(this.picture);
+      // show border
       this.borderComponent.showBorder();
     })
 
     this.dragListeners();
-
-    /*this.picture.dblclick((event) => {
-      let transform = this.picture.css('transform');
-      this.picture.css('transform', 'rotate(0deg)');
-      this.borderComponent.bindBorderPicture();
-    })
-    */
   }
 
-  //Dragging Listener
+  // Dragging Listener
   dragListeners(): void {
-    //container of image must be draggable and not the image otherwise you have problems width CSS:transform
+    // container of image must be draggable and not the image otherwise you have problems width CSS:transform
     // Jquery and transform are not compatible!!!
-    this.pictureContainer.draggable();
-    this.pictureContainer.on("dragstart", (event, ui) => {
+    this.mainPhotoContainer.draggable();
+    this.mainPhotoContainer.on('dragstart', (event, ui) => {
       console.log('event start', event);
       console.log('ui start', ui);
       this.opacity = 0.7;
     });
-    this.pictureContainer.on("drag", (event, ui) => {
+    this.mainPhotoContainer.on('drag', (event, ui) => {
       this.borderComponent.bindBorderPicture();
     });
-    this.pictureContainer.on("dragstop", (event, ui) => {
+    this.mainPhotoContainer.on('dragstop', (event, ui) => {
       this.opacity = 1;
       this.emitSettings(this.imgPosition, 'position', { top: ui.position.top, left: ui.position.left });
     }
@@ -92,28 +91,10 @@ export class PictureComponent implements OnInit {
     if (this.image.settings) {
       return {
         'zIndex': this.image.settings.zindex.zindex,
-        'width': this.image.settings.size.width,
-        'height': this.image.settings.size.height,
         'opacity': this.opacity,
-        'transform': this.image.settings.transform.rotation
 
-      }
-    }
-    return;
-  };
-
-  getStyleContainer(): any {
-    if (this.image.settings) {
-      return {
-        'zIndex': this.image.settings.zindex.zindex,
-        'left': this.image.settings.position.left + 'px',
-        'top': this.image.settings.position.top + 'px',
-        'position': this.cssPosition,
-        'width': this.image.settings.size.width,
-        'height': this.image.settings.size.height,
       }
     }
     return;
   }
-
 }

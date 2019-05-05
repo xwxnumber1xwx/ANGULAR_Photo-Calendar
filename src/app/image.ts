@@ -9,8 +9,8 @@ export class Image {
         zindex: 0
       },
       size: {
-        width: 'inherit',
-        height: 'inherit'
+        width: '-webkit-fill-available',
+        height: 'auto'
       },
       details: {
         month: 0,
